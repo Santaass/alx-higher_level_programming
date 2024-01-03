@@ -2,17 +2,19 @@
 
 const request = require('request');
 
-const url = process.argv[2];
-
-request.get(url, (error, response, body) => {
+request(process.argv[2], function (error, response, body) {
   if (error) {
     console.error(error);
-  } else if (response.statusCode !== 200) {
-    console.error(`Error: ${response.statusCode} - ${response.statusMessage}`);
-  } else {
-    const films = JSON.parse(body).results;
-    const characterId = '18';
-    const count = films.filter(film => film.characters.includes(`https://swapi-api.alx-tools.com/api/people/${characterId}/`)).length;
-    console.log(count);
   }
+  /* const nb = JSON.parse(body).results.reduce((acc, elem) => {
+    acc += elem.characters.reduce((acc, character) => {
+      return (character === 'https://swapi.co/api/people/18/' ? acc + 1 : acc);
+    }, 0);
+    return (acc);
+  }, 0);
+  */
+  const nb = JSON.parse(body).results.filter((elem) => {
+    return elem.characters.filter((url) => { return url.includes('18'); }).length;
+  }).length;
+  console.log(nb);
 });
